@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +23,21 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate saleDate;
+
+    private LocalDate saleDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
-    private SaleStatus status;
+    private SaleStatus status = SaleStatus.PENDING;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<SaleItem> items = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User user;
+    private User seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Client sellerClient;
+    private Client client;
 
     public void addItem(SaleItem item) {
         this.items.add(item);
@@ -48,6 +50,6 @@ public class Sale {
             BigDecimal subtotal = item.getQuantity().multiply(item.getPrice());
             total = total.add(subtotal);
         }
-        return total;
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
 }
