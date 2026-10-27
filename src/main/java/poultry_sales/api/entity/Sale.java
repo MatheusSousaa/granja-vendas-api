@@ -28,7 +28,7 @@ public class Sale {
     private LocalDate saleDate = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
-    private SaleStatus status = SaleStatus.PENDING;
+    private SaleStatus status = SaleStatus.PENDENTE;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     private List<SaleItem> items = new ArrayList<>();
@@ -62,19 +62,31 @@ public class Sale {
         return total.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public BigDecimal getBalance() {
-        BigDecimal paid = BigDecimal.ZERO;
+    public BigDecimal getPaid() {
+        var paid = BigDecimal.ZERO;
         for (Payment payment : payments) {
             paid = paid.add(payment.getAmount());
         }
-        var balance = getTotal().subtract(paid);
+        return paid;
+    }
+
+    public BigDecimal getBalance() {
+        var balance = getTotal().subtract(getPaid());
         return balance.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public BigDecimal updateStatus() {
-        if (status == SaleStatus.CANCELLED) {
+    public void updateStatus() {
+        if (status == SaleStatus.CANCELADO) {
             return;
         }
-
+        if (getBalance().compareTo(BigDecimal.ZERO) <= 0) {
+            status = SaleStatus.PAGO;
+        }
+        else if (getPaid().compareTo(BigDecimal.ZERO) > 0) {
+            status = SaleStatus.PARCIALMENTE_PAGO;
+        }
+        else {
+            status = SaleStatus.PENDENTE;
+        }
     }
 }
