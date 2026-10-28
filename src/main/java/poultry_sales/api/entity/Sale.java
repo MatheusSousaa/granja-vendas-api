@@ -51,6 +51,7 @@ public class Sale {
     public void addPayment(Payment payment) {
         this.payments.add(payment);
         payment.setSale(this);
+        updateStatus();
     }
 
     public BigDecimal getTotal() {
