@@ -1,4 +1,4 @@
-package poultry_sales.api.entity;
+package poultry_sales.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

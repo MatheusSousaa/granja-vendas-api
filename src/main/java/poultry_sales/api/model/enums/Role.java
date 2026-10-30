@@ -1,4 +1,4 @@
-package poultry_sales.api.entity.enums;
+package poultry_sales.api.model.enums;
 
 public enum Role {
 
