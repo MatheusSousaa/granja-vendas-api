@@ -34,4 +34,5 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Sale sale;
 
+    // .
 }
