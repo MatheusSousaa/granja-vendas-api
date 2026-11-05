@@ -9,9 +9,7 @@ import poultry_sales.api.model.enums.Role;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class User {
 
     @Id

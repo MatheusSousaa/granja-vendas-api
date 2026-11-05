@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
     List<Product> findByQuantityLessThan(BigDecimal quantity);
     List<Product> findByExpirationDateLessThanEqual(LocalDate date);
 }

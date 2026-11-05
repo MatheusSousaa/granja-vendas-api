@@ -3,20 +3,14 @@ package poultry_sales.api.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "payments")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 public class Payment {
 
     @Id
@@ -34,6 +28,4 @@ public class Payment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Sale sale;
 
-    // .
-    // ==
 }
