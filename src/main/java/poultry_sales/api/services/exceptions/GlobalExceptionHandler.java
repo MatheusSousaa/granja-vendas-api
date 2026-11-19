@@ -51,19 +51,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // 400 - JSON quebrado no corpo da requisição
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleUnreadable(
-            HttpMessageNotReadableException ex) {
-
-        Map<String, String> body = Map.of(
-                "error", "Bad Request",
-                "message", "JSON inválido"
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
     // 404 - URL que não existe
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Map<String, String>> handleNoResource(
@@ -72,6 +59,32 @@ public class GlobalExceptionHandler {
         Map<String, String> body = Map.of(
                 "error", "Not Found",
                 "message", "Rota não encontrada"
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    // 400 - Regra de negócio violada
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<Map<String, String>> handleBusinessRule(
+            BusinessRuleException ex) {
+
+        Map<String, String> body = Map.of(
+                "error", "Bad Request",
+                "message", ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // 400 - JSON quebrado no corpo da requisição
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleUnreadable(
+            HttpMessageNotReadableException ex) {
+
+        Map<String, String> body = Map.of(
+                "error", "Bad Request",
+                "message", "JSON inválido"
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
