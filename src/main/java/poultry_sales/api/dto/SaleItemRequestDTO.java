@@ -7,4 +7,4 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public record SaleItemRequestDTO(@NotNull Long productId,
-                                 @NotNull @Positive @Digits(integer = 3, fraction = 2) BigDecimal quantity) {}
+                                 @NotNull @Positive @Digits(integer = 7, fraction = 3) BigDecimal quantity) {}

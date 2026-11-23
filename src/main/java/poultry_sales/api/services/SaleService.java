@@ -3,9 +3,11 @@ package poultry_sales.api.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poultry_sales.api.dto.PaymentRequestDTO;
 import poultry_sales.api.dto.SaleItemRequestDTO;
 import poultry_sales.api.dto.SaleRequestDTO;
 import poultry_sales.api.model.*;
+import poultry_sales.api.model.enums.SaleStatus;
 import poultry_sales.api.repositories.ClientRepository;
 import poultry_sales.api.repositories.ProductRepository;
 import poultry_sales.api.repositories.SaleRepository;
@@ -79,5 +81,24 @@ public class SaleService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Venda não encontrada. ID: " + id
                 ));
+    }
+
+    @Transactional
+    public Sale addPayment(Long saleId, PaymentRequestDTO request) {
+        Sale sale = findById(saleId);
+
+        if (sale.getStatus() == SaleStatus.CANCELADO) {
+            throw new BusinessRuleException("Não dá para pagar uma venda cancelada");
+        }
+
+        if (request.amount().compareTo(sale.getBalance()) > 0) {
+            throw new BusinessRuleException("Pagamento maior que o saldo. Saldo: " + sale.getBalance());
+        }
+
+        Payment payment = new Payment();
+        payment.setAmount(request.amount());
+        sale.addPayment(payment);
+
+        return sale;
     }
 }
