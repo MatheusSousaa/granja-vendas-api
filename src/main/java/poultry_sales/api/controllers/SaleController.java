@@ -47,4 +47,10 @@ public class SaleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(SaleResponseDTO.from(sale));
     }
 
+    @GetMapping("/open")
+    public List<SaleResponseDTO> findOpen() {
+        return saleService.findOpen().stream()
+                .map(SaleResponseDTO::from)
+                .toList();
+    }
 }

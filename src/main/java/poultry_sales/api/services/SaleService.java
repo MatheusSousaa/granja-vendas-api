@@ -38,7 +38,6 @@ public class SaleService {
             client = clientRepository.findById(request.clientId())
                     .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado. ID: " + request.clientId()));
         }
-
         Sale sale = new Sale();
         sale.setSeller(seller);
         sale.setClient(client);
@@ -52,21 +51,17 @@ public class SaleService {
                     && product.getExpirationDate().isBefore(LocalDate.now())) {
                 throw new BusinessRuleException("O Produto está vencido, não pode ser vendido");
             }
-
             // regra 2: estoque insuficiente (a mensagem diz quanto tem)
             if (product.getQuantity().compareTo(itemRequest.quantity()) < 0) {
                 throw new BusinessRuleException("Estoque insuficiente. Disponível: " + product.getQuantity());
             }
-
             SaleItem saleItem = new SaleItem();
             saleItem.setProduct(product);
             saleItem.setQuantity(itemRequest.quantity());
             saleItem.setPrice(product.getPrice());
             sale.addItem(saleItem);
             product.setQuantity(product.getQuantity().subtract(itemRequest.quantity()));
-
         }
-
         return saleRepository.save(sale);
     }
 
@@ -100,5 +95,10 @@ public class SaleService {
         sale.addPayment(payment);
 
         return sale;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Sale> findOpen() {
+        return saleRepository.findByStatusIn(List.of(SaleStatus.PENDENTE, SaleStatus.PARCIALMENTE_PAGO));
     }
 }
