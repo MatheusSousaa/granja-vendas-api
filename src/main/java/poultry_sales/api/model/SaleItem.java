@@ -26,4 +26,7 @@ public class SaleItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal subtotal;
 }

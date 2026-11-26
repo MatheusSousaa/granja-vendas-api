@@ -52,15 +52,15 @@ public class SaleService {
                 throw new BusinessRuleException("O Produto está vencido, não pode ser vendido");
             }
             // regra 2: estoque insuficiente (a mensagem diz quanto tem)
-            if (product.getQuantity().compareTo(itemRequest.quantity()) < 0) {
+            if (product.getQuantity().compareTo(itemRequest.amount()) < 0) {
                 throw new BusinessRuleException("Estoque insuficiente. Disponível: " + product.getQuantity());
             }
             SaleItem saleItem = new SaleItem();
             saleItem.setProduct(product);
-            saleItem.setQuantity(itemRequest.quantity());
+            saleItem.setQuantity(itemRequest.amount());
             saleItem.setPrice(product.getPrice());
             sale.addItem(saleItem);
-            product.setQuantity(product.getQuantity().subtract(itemRequest.quantity()));
+            product.setQuantity(product.getQuantity().subtract(itemRequest.amount()));
         }
         return saleRepository.save(sale);
     }
