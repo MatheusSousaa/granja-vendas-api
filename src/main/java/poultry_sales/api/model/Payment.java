@@ -26,6 +26,5 @@ public class Payment {
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Sale sale;
-
+    private Client client;
 }
